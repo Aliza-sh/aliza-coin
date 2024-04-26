@@ -3,6 +3,8 @@ package com.aliza.alizacoin.features.marketActivity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
@@ -29,6 +31,22 @@ class MarketActivity : BaseActivity<ActivityMarketBinding>(),MarketAdapter.Recyc
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setSupportActionBar(binding.layoutToolbar.toolbar)
+
+        binding.layoutWatchlist.btnShowMore.setOnClickListener {
+            val intent = Intent(this, WebActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString(WEBSITE, "https://www.livecoinwatch.com/")
+            intent.putExtra(URL_DATA, bundle)
+            startActivity(intent)
+        }
+
+        binding.swipeRefreshMain.setOnRefreshListener {
+            networkChecker()
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.swipeRefreshMain.isRefreshing = false
+            }, 1500)
+
+        }
 
         networkChecker()
 
