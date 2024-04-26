@@ -13,4 +13,10 @@ interface ApiService {
         @Query("sortOrder") sortOrder: String = "popular"
     ): Call<NewsData>
 
+    @GET("top/totalvolfull")
+    fun getTopCoins(
+        @Query("tsym") to_symbol :String = "USD" ,
+        @Query("limit") limit_data :Int = 45
+    ) :Call<CoinsData>
+
 }

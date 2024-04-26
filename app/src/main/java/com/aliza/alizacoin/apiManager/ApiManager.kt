@@ -57,6 +57,29 @@ class ApiManager {
         })
     }
 
+    fun getCoinsList(apiCallback: ApiCallback<List<CoinsData.Data>>) {
+        apiService.getTopCoins().enqueue(object : Callback<CoinsData> {
+            override fun onResponse(call: Call<CoinsData>, response: Response<CoinsData>) {
+                if (response.isSuccessful) {
+                    val data = response.body()!!
+                    if (data != null) {
+                        apiCallback.onSuccess(data.data)
+                    } else {
+                        // Handle api null
+                        apiCallback.onError("data is null")
+                    }
+                } else {
+                    // Handle api error
+                    apiCallback.onError("Error: " + response.code())
+                }
+            }
+
+            override fun onFailure(call: Call<CoinsData>, t: Throwable) {
+                apiCallback.onError(t.message!!)
+            }
+        })
+    }
+
     interface ApiCallback<T> {
         fun onSuccess(data: T)
         fun onError(errorMessage: String)
