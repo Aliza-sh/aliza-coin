@@ -16,6 +16,7 @@
         <item name="android:textSize">14sp</item>
     </style>
     <style name="CoinBitText.TitleAlternate" parent="CoinBitText">
+        <item name="android:textColor">?attr/colorOutline</item>
         <item name="android:textSize">14sp</item>
     </style>
     <style name="CoinBitText.Body" parent="CoinBitText">
