@@ -11,7 +11,9 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aliza.alizacoin.apiManager.ApiManager
 import com.aliza.alizacoin.apiManager.model.CoinsData
+import com.aliza.alizacoin.base.ALL_COIN_DATA
 import com.aliza.alizacoin.base.BaseActivity
+import com.aliza.alizacoin.base.COIN_BUNDLE
 import com.aliza.alizacoin.base.NetworkChecker
 import com.aliza.alizacoin.base.URL_DATA
 import com.aliza.alizacoin.base.WEBSITE
@@ -116,6 +118,11 @@ class MarketActivity : BaseActivity<ActivityMarketBinding>(),MarketAdapter.Recyc
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCoinItemClicked(dataCoin: CoinsData.Data) {
         val intent = Intent(this, CoinActivity::class.java)
+
+        val allCoinDataBundle = Bundle()
+        allCoinDataBundle.putParcelable(ALL_COIN_DATA, dataCoin)
+        intent.putExtra(COIN_BUNDLE, allCoinDataBundle)
+
         startActivity(intent)
 
     }
