@@ -63,7 +63,7 @@ class ApiManager {
                 if (response.isSuccessful) {
                     val data = response.body()!!
                     if (data != null) {
-                        apiCallback.onSuccess(data.data)
+                        apiCallback.onSuccess(cleanCoinsData(data.data))
                     } else {
                         // Handle api null
                         apiCallback.onError("data is null")
@@ -78,6 +78,18 @@ class ApiManager {
                 apiCallback.onError(t.message!!)
             }
         })
+    }
+
+    private fun cleanCoinsData(data: List<CoinsData.Data>): List<CoinsData.Data> {
+
+        val newData = mutableListOf<CoinsData.Data>()
+
+        data.forEach {
+            if (it.dISPLAY != null || it.dISPLAY != null) {
+                newData.add(it)
+            }
+        }
+        return newData
     }
 
     interface ApiCallback<T> {

@@ -25,24 +25,42 @@ class MarketAdapter(
         @SuppressLint("SetTextI18n")
         fun bindViews(dataCoin: CoinsData.Data) {
 
+            binding.txtCoinName.text = dataCoin.coinInfo.fullName
+            binding.txtPrice.text = dataCoin.dISPLAY.uSD.pRICE
 
-            if (dataCoin.coinInfo?.fullName != null) {
-                binding.txtCoinName.text = dataCoin.coinInfo.fullName
-
+            val taghir = dataCoin.rAW.uSD.cHANGEPCT24HOUR
+            if (taghir > 0) {
+                binding.txtChange.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.colorGain
+                    )
+                )
+                binding.txtChange.text =
+                    dataCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 4) + "%"
+            } else if (taghir < 0) {
+                binding.txtChange.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.colorLoss
+                    )
+                )
+                binding.txtChange.text =
+                    dataCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 5) + "%"
             } else {
-                binding.txtPrice.text = ""
+                binding.txtChange.text = "0%"
             }
 
+            val marketCap = dataCoin.rAW.uSD.mKTCAP / 1000000000
+            val indexDot = marketCap.toString().indexOf('.')
+            binding.txtMarketCap.text = "$" + marketCap.toString().substring(0 , indexDot + 3) + " B"
 
-            if (dataCoin.dISPLAY?.uSD?.pRICE != null) {
-                binding.txtPrice.text = dataCoin.dISPLAY.uSD.pRICE
+            Glide
+                .with(itemView)
+                .load(BASE_URL_IMAGE + dataCoin.coinInfo.imageUrl)
+                .into(binding.imgCoin)
 
-            } else {
-                binding.txtPrice.text = ""
-            }
-            coinChange(dataCoin)
-            marketcap(dataCoin)
-            coinImage(dataCoin, itemView)
+
 
             itemView.setOnClickListener {
                 recyclerCallback.onCoinItemClicked(dataCoin)
@@ -72,58 +90,6 @@ class MarketAdapter(
     }
 
     override fun getItemCount(): Int = data.size
-
-    private fun coinChange(dataCoin: CoinsData.Data) {
-        if (dataCoin.rAW?.uSD?.cHANGEPCT24HOUR != null) {
-            val changed = dataCoin.rAW.uSD.cHANGEPCT24HOUR
-            if (changed > 0) {
-                binding.txtChange.setTextColor(
-                    ContextCompat.getColor(
-                        binding.root.context,
-                        R.color.colorGain
-                    )
-                )
-                binding.txtChange.text =
-                    dataCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 4)
-            } else if (changed < 0) {
-                binding.txtChange.setTextColor(
-                    ContextCompat.getColor(
-                        binding.root.context,
-                        R.color.colorLoss
-                    )
-                )
-                binding.txtChange.text =
-                    dataCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 5)
-            } else {
-                binding.txtChange.text = "0.0"
-            }
-        } else {
-            binding.txtChange.text = ""
-        }
-    }
-    private fun marketcap(dataCoin: CoinsData.Data) {
-        if (dataCoin.rAW?.uSD?.mKTCAP != null) {
-            val marketCap = dataCoin.rAW.uSD.mKTCAP.div(1000000000)
-            val indexDot = marketCap.toString().indexOf('.')
-            binding.txtMarketCap.text =
-                "$" + marketCap.toString().substring(0, indexDot + 3) + " B"
-        } else {
-            binding.txtMarketCap.text = ""
-        }
-    }
-    private fun coinImage(dataCoin: CoinsData.Data, itemView: View) {
-        if (dataCoin.coinInfo?.imageUrl != null) {
-            Glide
-                .with(itemView)
-                .load(BASE_URL_IMAGE + dataCoin.coinInfo.imageUrl)
-                .into(binding.imgCoin)
-        } else {
-            Glide
-                .with(itemView)
-                .load(R.drawable.img_logo)
-                .into(binding.imgCoin)
-        }
-    }
 
     interface RecyclerCallback {
         fun onCoinItemClicked(dataCoin: CoinsData.Data)
