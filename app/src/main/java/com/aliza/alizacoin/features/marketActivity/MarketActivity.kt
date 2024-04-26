@@ -10,9 +10,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aliza.alizacoin.apiManager.ApiManager
+import com.aliza.alizacoin.apiManager.model.CoinAboutData
+import com.aliza.alizacoin.apiManager.model.CoinAboutItem
 import com.aliza.alizacoin.apiManager.model.CoinsData
 import com.aliza.alizacoin.base.ALL_COIN_DATA
 import com.aliza.alizacoin.base.BaseActivity
+import com.aliza.alizacoin.base.COIN_ABOUT_DATA
 import com.aliza.alizacoin.base.COIN_BUNDLE
 import com.aliza.alizacoin.base.NetworkChecker
 import com.aliza.alizacoin.base.URL_DATA
@@ -21,12 +24,14 @@ import com.aliza.alizacoin.base.showSnacbar
 import com.aliza.alizacoin.databinding.ActivityMarketBinding
 import com.aliza.alizacoin.features.CoinActivity
 import com.aliza.alizacoin.features.WebActivity
+import com.google.gson.Gson
 
 class MarketActivity : BaseActivity<ActivityMarketBinding>(),MarketAdapter.RecyclerCallback {
     override fun inflateBinding() = ActivityMarketBinding.inflate(layoutInflater)
     private val apiManager = ApiManager()
     lateinit var dataNews: ArrayList<Pair<String, String>>
     private lateinit var marketAdapter: MarketAdapter
+    lateinit var aboutDataMap: MutableMap<String, CoinAboutItem>
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +57,7 @@ class MarketActivity : BaseActivity<ActivityMarketBinding>(),MarketAdapter.Recyc
 
         networkChecker()
 
+        getAboutDataFromAssets()
     }
     private fun networkChecker() {
         if (NetworkChecker(applicationContext).isInternetConnected) {
@@ -121,9 +127,35 @@ class MarketActivity : BaseActivity<ActivityMarketBinding>(),MarketAdapter.Recyc
 
         val allCoinDataBundle = Bundle()
         allCoinDataBundle.putParcelable(ALL_COIN_DATA, dataCoin)
+        allCoinDataBundle.putParcelable(COIN_ABOUT_DATA, aboutDataMap[dataCoin.coinInfo.name])
         intent.putExtra(COIN_BUNDLE, allCoinDataBundle)
 
         startActivity(intent)
 
     }
+
+    private fun getAboutDataFromAssets() {
+
+        val fileInString = applicationContext.assets
+            .open("currencyinfo.json")
+            .bufferedReader()
+            .use { it.readText() }
+
+        aboutDataMap = mutableMapOf<String, CoinAboutItem>()
+
+        val gson = Gson()
+        val dataAboutAll = gson.fromJson(fileInString, CoinAboutData::class.java)
+
+        dataAboutAll.forEach {
+            aboutDataMap[it.currencyName] = CoinAboutItem(
+                it.info.desc,
+                it.info.web,
+                it.info.twt,
+                it.info.reddit,
+                it.info.github
+            )
+        }
+
+    }
+
 }
