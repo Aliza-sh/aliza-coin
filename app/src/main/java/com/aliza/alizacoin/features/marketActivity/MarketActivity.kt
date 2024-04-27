@@ -22,7 +22,7 @@ import com.aliza.alizacoin.base.URL_DATA
 import com.aliza.alizacoin.base.WEBSITE
 import com.aliza.alizacoin.base.showSnacbar
 import com.aliza.alizacoin.databinding.ActivityMarketBinding
-import com.aliza.alizacoin.features.CoinActivity
+import com.aliza.alizacoin.features.coinActivity.CoinActivity
 import com.aliza.alizacoin.features.WebActivity
 import com.google.gson.Gson
 
