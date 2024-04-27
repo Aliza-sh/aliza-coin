@@ -16,7 +16,7 @@
         android:theme="@style/Theme.AlizaCoin"
         tools:targetApi="31">
         <activity
-            android:name=".features.CoinActivity"
+            android:name=".features.coinActivity.CoinActivity"
             android:exported="false" />
         <activity
             android:name=".features.marketActivity.MarketActivity"

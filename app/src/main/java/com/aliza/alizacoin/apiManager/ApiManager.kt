@@ -1,5 +1,6 @@
 package com.aliza.alizacoin.apiManager
 
+import com.aliza.alizacoin.apiManager.model.ChartData
 import com.aliza.alizacoin.apiManager.model.CoinsData
 import com.aliza.alizacoin.apiManager.model.NewsData
 import okhttp3.OkHttpClient
@@ -90,6 +91,74 @@ class ApiManager {
             }
         }
         return newData
+    }
+
+    fun getChartData(
+        symbol: String,
+        period: String,
+        apiCallback: ApiCallback<Pair<List<ChartData.Data>, ChartData.Data?>>
+    ) {
+        var histoPeriod = ""
+        var limit = 30
+        var aggregate = 1
+        when (period) {
+            HOUR -> {
+                histoPeriod = HISTO_MINUTE
+                limit = 60
+                aggregate = 12
+            }
+            HOURS24 -> {
+                histoPeriod = HISTO_HOUR
+                limit = 24
+            }
+            MONTH -> {
+                histoPeriod = HISTO_DAY
+                limit = 30
+            }
+            MONTH3 -> {
+                histoPeriod = HISTO_DAY
+                limit = 90
+            }
+            WEEK -> {
+                histoPeriod = HISTO_HOUR
+                aggregate = 6
+            }
+            YEAR -> {
+                histoPeriod = HISTO_DAY
+                aggregate = 13
+            }
+            ALL -> {
+                histoPeriod = HISTO_DAY
+                aggregate = 30
+                limit = 2000
+            }
+        }
+
+        apiService.getChartData(histoPeriod, symbol, limit, aggregate)
+            .enqueue(object : Callback<ChartData> {
+                override fun onResponse(call: Call<ChartData>, response: Response<ChartData>) {
+                    if (response.isSuccessful) {
+                        val dataFull = response.body()!!
+                        if (dataFull != null) {
+                            val dataChart = dataFull.data
+                            val dataBaseLineChart = dataFull.data.maxByOrNull { it.close.toFloat() }
+                            val returningData = Pair(dataChart, dataBaseLineChart)
+
+                            apiCallback.onSuccess(returningData)
+                        } else {
+                            // Handle api null
+                            apiCallback.onError("data is null")
+                        }
+                    } else {
+                        // Handle api error
+                        apiCallback.onError("Error: " + response.code())
+                    }
+                }
+
+                override fun onFailure(call: Call<ChartData>, t: Throwable) {
+                    apiCallback.onError(t.message!!)
+                }
+            })
     }
 
     interface ApiCallback<T> {

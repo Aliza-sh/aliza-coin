@@ -16,6 +16,7 @@
         <item name="android:textSize">14sp</item>
     </style>
     <style name="CoinBitText.TitleAlternate" parent="CoinBitText">
+        <item name="android:textColor">?attr/colorOutline</item>
         <item name="android:textSize">14sp</item>
     </style>
     <style name="CoinBitText.Body" parent="CoinBitText">
@@ -25,6 +26,7 @@
         <item name="android:textSize">18sp</item>
     </style>
     <style name="CoinBitText.BodyTertiary" parent="CoinBitText">
+        <item name="android:textColor">?attr/colorOutline</item>
         <item name="android:textSize">18sp</item>
     </style>
     <style name="CoinBitText.Body1" parent="CoinBitText">
@@ -45,6 +47,18 @@
     </style>
     <style name="CoinBitText.Huge" parent="CoinBitText">
         <item name="android:textSize">42sp</item>
+    </style>
+
+    <!--     spark style main -->
+    <style name="MySparkViewStyle" parent="@style/spark_SparkView">
+        <item name="spark_scrubLineColor">?attr/colorPrimary</item>
+        <item name="spark_scrubLineWidth">1dp</item>
+        <item name="spark_fill">false</item>
+        <item name="spark_baseLineColor">?attr/colorPrimary</item>
+        <item name="spark_baseLineWidth">1dp</item>
+        <item name="spark_animateChanges">true</item>
+        <item name="spark_scrubEnabled">true</item>
+
     </style>
 
 </resources>
