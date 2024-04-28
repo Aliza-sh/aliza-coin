@@ -35,8 +35,6 @@ data class CoinsData(
             val algorithm: String,
             @SerializedName("AssetLaunchDate")
             val assetLaunchDate: String,
-            @SerializedName("BlockNumber")
-            val blockNumber: Int,
             @SerializedName("BlockReward")
             val blockReward: Double,
             @SerializedName("BlockTime")

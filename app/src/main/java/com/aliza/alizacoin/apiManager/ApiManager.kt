@@ -86,7 +86,7 @@ class ApiManager {
         val newData = mutableListOf<CoinsData.Data>()
 
         data.forEach {
-            if (it.dISPLAY != null || it.dISPLAY != null) {
+            if (it?.rAW?.uSD?.cHANGEPCT24HOUR != null && it?.dISPLAY?.uSD?.pRICE != null && it?.rAW?.uSD?.mKTCAP != null) {
                 newData.add(it)
             }
         }

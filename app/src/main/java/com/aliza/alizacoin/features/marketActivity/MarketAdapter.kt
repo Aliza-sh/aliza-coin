@@ -28,32 +28,33 @@ class MarketAdapter(
             binding.txtCoinName.text = dataCoin.coinInfo.fullName
             binding.txtPrice.text = dataCoin.dISPLAY.uSD.pRICE
 
-            val taghir = dataCoin.rAW.uSD.cHANGEPCT24HOUR
-            if (taghir > 0) {
+            val change = dataCoin.rAW.uSD.cHANGEPCT24HOUR
+            if (change > 0) {
                 binding.txtChange.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,
                         R.color.colorGain
                     )
                 )
-                binding.txtChange.text =
-                    dataCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 4) + "%"
-            } else if (taghir < 0) {
+                //dataCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 4) + "%"
+                binding.txtChange.text = dataCoin.dISPLAY.uSD.cHANGEPCT24HOUR  + "%"
+            } else if (change < 0) {
                 binding.txtChange.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,
                         R.color.colorLoss
                     )
                 )
-                binding.txtChange.text =
-                    dataCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 5) + "%"
+                //dataCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 5) + "%"
+                binding.txtChange.text = dataCoin.dISPLAY.uSD.cHANGEPCT24HOUR  + "%"
             } else {
                 binding.txtChange.text = "0%"
             }
 
-            val marketCap = dataCoin.rAW.uSD.mKTCAP / 1000000000
+            /*val marketCap = dataCoin.rAW.uSD.mKTCAP / 1000000000
             val indexDot = marketCap.toString().indexOf('.')
-            binding.txtMarketCap.text = "$" + marketCap.toString().substring(0 , indexDot + 3) + " B"
+            "$" + marketCap.toString().substring(0 , indexDot + 3) + " B"*/
+            binding.txtMarketCap.text = dataCoin.dISPLAY.uSD.mKTCAP
 
             Glide
                 .with(itemView)
